@@ -317,6 +317,7 @@ for i in range(0, nsample):
     prediction = None # Todo
     true_target = None # Todo
     if prediction != true_target:
+        pass
         # TODO
 
 """## Open analysis
