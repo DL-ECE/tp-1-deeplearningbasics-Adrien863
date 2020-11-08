@@ -102,7 +102,7 @@ plot_one_image(X_test, y_test , 250)
 def normalize_data(dataset: np.array) -> np.array:
     return dataset/255
 
-mnist_data = normalize_data(mnist_data)
+X_train,X_test = normalize_data(X_train),normalize_data(X_test)
 
 """It's also important to find a good representation of the target.
 
@@ -122,8 +122,7 @@ def target_to_one_hot(target: np.array) -> np.array:
     one_hot_matrix[np.arange(target.shape[0]), target] = 1
     return one_hot_matrix
 
-y_train = target_to_one_hot(y_train)
-y_test = target_to_one_hot(y_test)
+y_train,y_test = target_to_one_hot(y_train),target_to_one_hot(y_test)
 
 """## Useful functions (3 pts)
 
@@ -251,7 +250,7 @@ class FFNN:
         for i in range(len(pred)):
             if pred[i] == batch[i]:
                 match += 1
-                
+
         return match/len(pred)
 
 
@@ -277,7 +276,7 @@ class FFNN:
         y_test = y_test.reshape(-1, self.minibatch_size, 10)
         # TODO: Get the number of batch based on X_train's shape
         nbatch = X_train.shape[0]
-        error_test = 0.0
+        error_test,best_epoch,best_accuracy = 0.0, 0.0, 0.0
         for epoch in range(0, nepoch):
             error_sum_train = 0.0
             for i in range(0, nbatch):
@@ -288,7 +287,9 @@ class FFNN:
                 self.update_all_weights()
                 error_sum_train += self.get_error(y_pred, y_batch)
             error_test = self.get_test_error(X_test, y_test)
-            print(f"Training accuracy: {error_sum_train / nbatch:.3f}, Test accuracy: {error_test:.3f}")
+            best_epoch = epoch if error_test>best_accuracy else best_epoch
+            best_accuracy = error_test if error_test>best_accuracy else best_accuracy
+            print(f"Training accuracy: {error_sum_train / nbatch:.3f}, Test accuracy: {error_test:.3f}, Epoch {epoch}, Best epoch : {best_epoch} with {best_accuracy*100:.2f}%")
         return error_test
 
 """## Training phase (12 pts)
@@ -302,11 +303,11 @@ It's on 12 points because there is a lot of functions to fill but also we want t
 To have all the point your neural network needs to have a Test accuracy > 92 % !!
 """
 
-minibatch_size = 20
-nepoch = 75
+minibatch_size = 4
+nepoch = 50
 learning_rate = 0.01
 
-ffnn = FFNN(config=[784, 650, 650, 10], minibatch_size=minibatch_size, learning_rate=learning_rate)
+ffnn = FFNN(config=[784, 700, 700, 10], minibatch_size=minibatch_size, learning_rate=learning_rate)
 
 list_divisors = []
 for i in range(1, X_train.shape[0] + 1):
@@ -342,12 +343,15 @@ true_target = np.argmax(y_true[index_to_plot,:])
 # is it the same number ?
 
 # loop arround the demo test set and try to find a miss prediction
+list_miss_prediction = []
 for i in range(0, nsample):   
-    prediction = None # Todo
-    true_target = None # Todo
+    prediction = np.argmax(y_demo[i]) # Todo
+    true_target = np.argmax(y_true[i]) # Todo
     if prediction != true_target:
         # TODO
-        pass
+        list_miss_prediction.append((prediction,true_target))
+
+print(f"In this demo test set, there are {len(list_miss_prediction)} prediction errors")
 
 """## Open analysis
 
@@ -362,6 +366,8 @@ Also explain how the neural network behave when changing them ?
 
 ## Open analysis answer
 
-TODO
-"""
+TODO 
 
+My "best" test config was minibatch = 4; nepoch = 50; learning_rate = 0.01 ; config = [784 700 700 10].
+Minibatch needs to be low to perform, nepoch needs to be enough high to have an impact on the training, the learning_rate is a bit hard to configure as it makes a lot during the training phase, a too high/low rate "blocks/ends" the training phase. To conclude, hidden layers have to be huge to perform well!
+"""
