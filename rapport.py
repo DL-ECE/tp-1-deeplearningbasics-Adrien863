@@ -41,7 +41,7 @@ from sklearn.model_selection import train_test_split
 random.seed(1342)
 np.random.seed(1342)
 
-"""## Data preparation (3 pts)
+"""### Data preparation (3 pts)
 
 As seen in the lecture one of the earlier use case for deep learning was digit recognition. 
 
