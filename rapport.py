@@ -315,7 +315,7 @@ list_divisors
 assert X_train.shape[0] % minibatch_size == 0
 assert X_test.shape[0] % minibatch_size == 0
 
-if __name__ = "__main__" :
+if __name__ == "__main__" :
     
     err = ffnn.train(nepoch, X_train, y_train, X_test, y_test)
 
