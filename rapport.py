@@ -127,7 +127,7 @@ Implement the sigmoid function, its derivative and the softmax function:
 
 def sigmoid(M: np.array) -> np.array:
     """Apply a sigmoid to the input array"""
-    return 1/(1+np.exp(M))
+    return 1/(1+np.exp(-M))
 
 def d_sigmoid(M: np.array)-> np.array:
     """Compute the derivative of the sigmoid""" 
